@@ -1,4 +1,3 @@
-
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
@@ -253,7 +252,7 @@ public class GraphDraw extends JPanel implements Serializable{
 		    	else if(choice.equals("mov")){
 		    		if(lines.size() == 0) { 
 		    			JPanel p = new JPanel();
-		    			JOptionPane.showMessageDialog(p,"There are no lines at the moment.\n Please create one before moving.");
+		    			JOptionPane.showMessageDialog(p,"There are no edges at the moment.\n Please create one before moving.");
 		    		}
 		    		else {
 		    			for(Line2D l: lines) {
@@ -285,22 +284,28 @@ public class GraphDraw extends JPanel implements Serializable{
 	    			repaint();
 	    		}
 	    		else if(choice.equals("mov")) {
-	    			for(Point p: nodes) {
-	    				if(p.distance(e.getPoint()) <= 10) {
-	    					pindex = nodes.indexOf(p);
-	    					for(Line2D l : lines) {
-	    						if(l.ptLineDist(p) <= 10) {
-	    							lindex.add(lines.indexOf(l));
-	    							if(l.getP1().distance(p)<l.getP2().distance(p)) {
-	    								plindex.add(1);
-	    							}
-	    							else {
-	    								plindex.add(2);
-	    							}
-	    						}
-	    					}
-	    					break;
-	    				}
+	    			if(nodes.size() >= 1) {
+		    			for(Point p: nodes) {
+		    				if(p.distance(e.getPoint()) <= 10) {
+		    					pindex = nodes.indexOf(p);
+		    					for(Line2D l : lines) {
+		    						if(l.ptLineDist(p) <= 10) {
+		    							lindex.add(lines.indexOf(l));
+		    							if(l.getP1().distance(p)<l.getP2().distance(p)) {
+		    								plindex.add(1);
+		    							}
+		    							else {
+		    								plindex.add(2);
+		    							}
+		    						}
+		    					}
+		    					break;
+		    				}
+		    			}
+	    			}
+	    			else {
+	    				JPanel p = new JPanel();
+		    			JOptionPane.showMessageDialog(p,"There are no nodes at the moment. Please add one before moving.");    				
 	    			}
 	    		}
 	    	}
@@ -317,20 +322,6 @@ public class GraphDraw extends JPanel implements Serializable{
 			    	}
 			        repaint();
 			        repaint();
-		    	}
-		    	else if(choice.equals("mov")) {
-		    		/*
-		    		if(pt1 == true) {
-		    			move.setLocation(e.getPoint());
-		    			end.setLocation(move);
-		    		}
-		    		else {
-		    			move2.setLocation(e.getPoint());
-		    			end.setLocation(move2);
-		    		}
-		    		lines.get(index).setLine(move,move2);
-		    		repaint();
-		    		*/
 		    	}
 	    	}
 	    	else {
@@ -374,7 +365,7 @@ public class GraphDraw extends JPanel implements Serializable{
 			    	else if(choice.equals("del")){ 
 			    		if(lines.size() == 0) { 
 			    			JPanel p = new JPanel();
-			    			JOptionPane.showMessageDialog(p,"There are no lines at the moment.\n Please create one before deleting.");
+			    			JOptionPane.showMessageDialog(p,"There are no edges at the moment.\n Please create one before deleting.");
 			    		}
 			    		else {
 				    		for(Line2D l: lines) { 
@@ -386,33 +377,6 @@ public class GraphDraw extends JPanel implements Serializable{
 				    			
 				    		}
 			    		}
-			    	}
-			    	else {
-			    		/*
-			    		boolean set = false;
-			    		for(Point p:nodes) {
-				    		if(pt1 == true) {
-				    			move.setLocation(e.getPoint());
-				    			if(e.getPoint().distance(p)<= 30) {
-				    				set = true;
-				    				move.setLocation(p);
-				    				lines.get(index).setLine(move,move2);
-				    			}
-				    		}
-				    		else {
-				    			move2.setLocation(e.getPoint());
-				    			if(e.getPoint().distance(p)<= 30) {
-				    				set = true;
-				    				move2.setLocation(p);
-				    				lines.get(index).setLine(move,move2);
-				    			}
-				    		}
-			    		}
-			    		if(set == false) {
-			    			lines.remove(index);
-			    		}
-			    		repaint();
-			    		*/
 			    	}		    	
 	    	}
 	    	else {
@@ -422,22 +386,28 @@ public class GraphDraw extends JPanel implements Serializable{
 	    			repaint();
 	    		}
 	    		else if(choice.equals("del")) {
-	    			for(Point p: nodes) {
-	    				if(p.distance(e.getPoint()) <= 15) {
-	    					nodes.remove(p);
-	    					break;
-	    				}
+	    			if(nodes.size()>= 1) {
+		    			for(Point p: nodes) {
+		    				if(p.distance(e.getPoint()) <= 15) {
+		    					nodes.remove(p);
+		    					break;
+		    				}
+		    			}
+		    			ArrayList<Line2D> temp = new ArrayList<Line2D>();
+		    			for(Line2D l: lines) {
+	    					if(l.getP1().distance(e.getPoint()) <= 15 || l.getP2().distance(e.getPoint()) <= 15) {
+	    						temp.add(l);
+	    					}
+		    			}
+		    			for(Line2D t: temp) {
+		    				lines.remove(t);
+		    			}
+		    			repaint();
 	    			}
-	    			ArrayList<Line2D> temp = new ArrayList<Line2D>();
-	    			for(Line2D l: lines) {
-    					if(l.getP1().distance(e.getPoint()) <= 15 || l.getP2().distance(e.getPoint()) <= 15) {
-    						temp.add(l);
-    					}
+	    			else {
+	    				JPanel p = new JPanel();
+		    			JOptionPane.showMessageDialog(p,"There are no nodes at the moment. Please add one first to delete a node.");
 	    			}
-	    			for(Line2D t: temp) {
-	    				lines.remove(t);
-	    			}
-	    			repaint();	
 	    		}
 	    		else {
 	    			lindex.clear();
@@ -478,12 +448,12 @@ public class GraphDraw extends JPanel implements Serializable{
 		}
 		
 		for(Point p: nodes) {
-			//System.out.println(p);
+			
 			g2d.fillOval(p.x -5, p.y -5, 10, 10);
 		}
 		
 		for(Line2D l: lines) { 
-			//System.out.println(l);
+			
 			drawArrowLine(g2d,(int)l.getX1(),(int)l.getY1(),(int)l.getX2(),(int)l.getY2(),10,5);
 		}
 		
